@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ping-logger
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ping-logger
+  template:
+    metadata:
+      labels:
+        app: ping-logger
+    spec:
+      containers:
+        - name: ping-logger
+          image: docker.io/sivadeep/ping
+          ports:
+            - containerPort: 80
