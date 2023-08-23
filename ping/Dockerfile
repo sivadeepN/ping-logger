@@ -6,7 +6,7 @@ WORKDIR /app
 
 # Copy the Go application files to the container
 COPY go.mod go.sum /app/
-COPY ping.go /app/
+COPY main.go /app/
 
 # Change directory to the app directory
 WORKDIR /app

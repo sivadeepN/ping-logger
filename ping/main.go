@@ -1,6 +1,8 @@
 package main
 
 import (
+	"encoding/json"
+	"io/ioutil"
 	"log"
 	"net/http"
 )
@@ -20,10 +22,29 @@ func handlePing(w http.ResponseWriter, r *http.Request) {
 
 	// Log the ping information
 	log.Printf("Ping request from %s\n", url)
+	log.Printf("Decoding the body")
+
+	// Read the request body
+	body, err := ioutil.ReadAll(r.Body)
+	if err != nil {
+		http.Error(w, "Error reading request body", http.StatusBadRequest)
+		return
+	}
+
+	// Log the request body
+	log.Printf("Request body: %s\n", body)
 
 	// You can perform additional processing or logging here
 
-	// Send a response
+	// Send a JSON response
+	response := map[string]string{"message": "Ping received!", "requestBody": string(body)}
+	responseJSON, err := json.Marshal(response)
+	if err != nil {
+		http.Error(w, "Error creating JSON response", http.StatusInternalServerError)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
-	w.Write([]byte("Ping received!"))
+	w.Write(responseJSON)
 }
